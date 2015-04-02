@@ -249,9 +249,9 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
 		
-		depth_mid[3*i+0] = 200;
+		depth_mid[3*i+0] = 100;
 		depth_mid[3*i+1] = 200;
-		depth_mid[3*i+2] = 200;
+		depth_mid[3*i+2] = 150;
 
 		/*switch (pval>>8) {
 			case 0:
