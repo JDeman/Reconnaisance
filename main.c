@@ -256,6 +256,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  else {
 			    depth_mid[3*i+0] = 255;
@@ -269,6 +273,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  
 			  else {
@@ -283,6 +291,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  
 			  else {
@@ -297,6 +309,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  
 			  else {
@@ -311,6 +327,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  
 			  else {
@@ -325,6 +345,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;
 			  }
 			  
 			  else {
@@ -429,7 +453,7 @@ int main(int argc, char **argv)
 		v = powf(v, 3)* 6;
 		t_gamma[i] = v*6*256;
 	}
-
+if(depth[i]<600)
 	g_argc = argc;
 	g_argv = argv;
 
