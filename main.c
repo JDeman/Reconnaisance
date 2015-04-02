@@ -247,49 +247,98 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
-		int lb = pval & 0xff;
-		
-		depth_mid[3*i+0] = 100;
-		depth_mid[3*i+1] = 200;
-		depth_mid[3*i+2] = 150;
+		int lb = pval & 0xff;			
 
-		/*switch (pval>>8) {
+		switch (pval>>8) {
+		  
 			case 0:
-				depth_mid[3*i+0] = 255;
-				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255-lb;
-				break;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  else {
+			    depth_mid[3*i+0] = 255;
+			    depth_mid[3*i+1] = 255-lb;
+			    depth_mid[3*i+2] = 255-lb;
+			    break;
+			  }
+			  
 			case 1:
-				depth_mid[3*i+0] = 255;
-				depth_mid[3*i+1] = lb;
-				depth_mid[3*i+2] = 0;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 255;
+			    depth_mid[3*i+1] = lb;
+			    depth_mid[3*i+2] = 0;
+			  }
 				break;
+				
 			case 2:
-				depth_mid[3*i+0] = 255-lb;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = 0;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 255-lb;
+			    depth_mid[3*i+1] = 255;
+			    depth_mid[3*i+2] = 0;
+			  }
 				break;
+				
 			case 3:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = lb;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 255;
+			    depth_mid[3*i+2] = lb;
+			  }
 				break;
+				
 			case 4:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 255-lb;
+			    depth_mid[3*i+2] = 255;
+			  }
 				break;
+	
 			case 5:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 0;
-				depth_mid[3*i+2] = 255-lb;
+			  if(depth[i]<100) {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 255-lb;
+			  }
 				break;
 			default:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 0;
 				break;
-		}*/
+		}
 	}
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
