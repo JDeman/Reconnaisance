@@ -252,7 +252,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		switch (pval>>8) {
 		  
 			case 0:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -265,7 +265,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			  }
 			  
 			case 1:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -279,7 +279,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				break;
 				
 			case 2:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -293,7 +293,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				break;
 				
 			case 3:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -307,7 +307,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				break;
 				
 			case 4:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -321,7 +321,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				break;
 	
 			case 5:
-			  if(depth[i]>100) {
+			  if(depth[i]<300) {
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 0;
@@ -471,3 +471,4 @@ int main(int argc, char **argv)
 
 	return 0;
 }
+
