@@ -248,7 +248,12 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
-		switch (pval>>8) {
+		
+		depth_mid[3*i+0] = 200;
+		depth_mid[3*i+1] = 200;
+		depth_mid[3*i+2] = 200;
+
+		/*switch (pval>>8) {
 			case 0:
 				depth_mid[3*i+0] = 255;
 				depth_mid[3*i+1] = 255-lb;
@@ -284,7 +289,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 0;
 				break;
-		}
+		}*/
 	}
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
