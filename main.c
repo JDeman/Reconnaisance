@@ -263,6 +263,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	x=plusProche%640;
 	y=plusProche/640;
+	printf("x=%d y=%d\n", x, y);
 	/***********************************/
 	
 	int compt =0;
@@ -293,14 +294,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 				
@@ -326,14 +327,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 			  }
@@ -358,14 +359,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 			  }
@@ -389,14 +390,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 			  }
@@ -420,14 +421,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 			  }
@@ -451,14 +452,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 
 				for (compt=0;compt<40;compt++) {
 				for (compt1=0;compt1<40;compt1++) {	
-			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250+compt,230+compt1)+2] = 0;
 					
 					
-			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
-			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt2)+2] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+0] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+1] = 0;
+			    		rgb_front[3*getIndiceOfTab(250-compt,230-compt1)+2] = 0;
 				}
 				}				
 			  }
