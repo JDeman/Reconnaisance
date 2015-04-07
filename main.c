@@ -239,45 +239,145 @@ void *gl_threadfunc(void *arg)
 
 uint16_t t_gamma[2048];
 
+int getIndiceOfTab(int x, int y) {
+	int indice;
+	indice = (y*680) + x;
+	return indice; 
+}
+
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
 	int i;
 	uint16_t *depth = (uint16_t*)v_depth;
-
 	pthread_mutex_lock(&gl_backbuf_mutex);
+
+	//recherche du point le plus proche
+	int plusProche=0;
+	int x = 0;
+	int y = 0;
+	for (i=0;i<640*480;i++) {
+		if(depth[i]>plusProche) {
+			plusProche=i;
+		}
+	}
+	
+	x=plusProche%640;
+	y=plusProche/640;
+	/***********************************/
+	
+	
+
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
-		int lb = pval & 0xff;
+		int lb = pval & 0xff;			
+
 		switch (pval>>8) {
+		  
 			case 0:
-				depth_mid[3*i+0] = 255;
-				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255-lb;
-				break;
+			  if(depth[i]<620 && depth[i]>600) {
+			   /* depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_mid[3*i+0] = 0;
+			    rgb_mid[3*i+1] = 0;
+			    rgb_mid[3*i+2] = 0;*/
+			  }
+			  else {
+			    depth_mid[3*i+0] = 255;
+			    depth_mid[3*i+1] = 255-lb;
+			    depth_mid[3*i+2] = 255-lb;
+			    break;
+			  }
+			  
 			case 1:
-				depth_mid[3*i+0] = 255;
-				depth_mid[3*i+1] = lb;
-				depth_mid[3*i+2] = 0;
+			  if(depth[i]<620 && depth[i]>600) {
+			    /*depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_front[3*i+0] = 0;
+			    rgb_front[3*i+1] = 0;
+			    rgb_front[3*i+2] = 0;*/
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 255;
+			    depth_mid[3*i+1] = lb;
+			    depth_mid[3*i+2] = 0;
+			  }
 				break;
+				
 			case 2:
-				depth_mid[3*i+0] = 255-lb;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = 0;
+			  if(depth[i]<620 && depth[i]>600) {
+			    /*depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_front[3*i+0] = 0;
+			    rgb_front[3*i+1] = 0;
+			    rgb_front[3*i+2] = 0;test*/
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 255-lb;
+			    depth_mid[3*i+1] = 255;
+			    depth_mid[3*i+2] = 0;
+			  }
 				break;
+				
 			case 3:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = lb;
+			  if(depth[i]<620 && depth[i]>600) {
+			   /* depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_front[3*i+0] = 0;
+			    rgb_front[3*i+1] = 0;
+			    rgb_front[3*i+2] = 0;*/
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 255;
+			    depth_mid[3*i+2] = lb;
+			  }
 				break;
+				
 			case 4:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255;
+			  if(depth[i]<620 && depth[i]>600) {
+			   /* depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_front[3*i+0] = 0;
+			    rgb_front[3*i+1] = 0;
+			    rgb_front[3*i+2] = 0;*/
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 255-lb;
+			    depth_mid[3*i+2] = 255;
+			  }
 				break;
+	
 			case 5:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 0;
-				depth_mid[3*i+2] = 255-lb;
+			  if(depth[i]<620 && depth[i]>600) {
+			   /* depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 0;
+			    
+			    rgb_front[3*i+0] = 0;
+			    rgb_front[3*i+1] = 0;
+			    rgb_front[3*i+2] = 0;*/
+			  }
+			  
+			  else {
+			    depth_mid[3*i+0] = 0;
+			    depth_mid[3*i+1] = 0;
+			    depth_mid[3*i+2] = 255-lb;
+			  }
 				break;
 			default:
 				depth_mid[3*i+0] = 0;
