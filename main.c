@@ -265,7 +265,8 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	y=plusProche/640;
 	/***********************************/
 	
-	
+	int compt =0;
+	int compt1=0;
 
 	for (i=0; i<640*480; i++) {
 		int pval = t_gamma[depth[i]];
@@ -287,6 +288,22 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 255;
 			    depth_mid[3*i+1] = 255-lb;
 			    depth_mid[3*i+2] = 255-lb;
+				
+			
+
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+				}
+				}				
+				
 			    break;
 			  }
 			  
@@ -305,6 +322,20 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 255;
 			    depth_mid[3*i+1] = lb;
 			    depth_mid[3*i+2] = 0;
+
+				
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+				}
+				}				
 			  }
 				break;
 				
@@ -323,6 +354,20 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 255-lb;
 			    depth_mid[3*i+1] = 255;
 			    depth_mid[3*i+2] = 0;
+
+				
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+				}
+				}				
 			  }
 				break;
 				
@@ -341,6 +386,19 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 255;
 			    depth_mid[3*i+2] = lb;
+
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+				}
+				}				
 			  }
 				break;
 				
@@ -359,6 +417,19 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 255-lb;
 			    depth_mid[3*i+2] = 255;
+
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+2] = 0;
+				}
+				}				
 			  }
 				break;
 	
@@ -377,6 +448,19 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			    depth_mid[3*i+0] = 0;
 			    depth_mid[3*i+1] = 0;
 			    depth_mid[3*i+2] = 255-lb;
+
+				for (compt=0;compt<40;compt++) {
+				for (compt1=0;compt1<40;compt1++) {	
+			    		rgb_mid[3*getIndiceOfTab(x+compt,y+compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x+compt,y+compt1)+2] = 0;
+					
+					
+			    		rgb_mid[3*getIndiceOfTab(x-compt,y-compt1)+0] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt1)+1] = 0;
+			    		rgb_mid[3*igetIndiceOfTab(x-compt,y-compt2)+2] = 0;
+				}
+				}				
 			  }
 				break;
 			default:
