@@ -241,7 +241,7 @@ uint16_t t_gamma[2048];
 
 int getIndiceOfTab(int x, int y) {
         int indice;
-        indice = (y*680) + x;
+        indice = (y*640) + x;
         return indice;
 }
 
