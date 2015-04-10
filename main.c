@@ -254,26 +254,16 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	for (i=0; i<640*480; i++) {
 	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
-		int plusProche=0;
-		if (depth[i]>plusProche)
+		int plusProche=1000;
+		if (depth[i]<plusProche)
 			plusProche=depth[i];
-		//x=plusProche%640;
-		//y=plusProche/480;
-		x=320;
-		y=240;
-			//printf("x=%d y=%d\n", x, y);
+		x=plusProche%640;
+		y=plusProche/640;
 		
 	/*************************************************************************/
 
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
-		compt2=0;
-		/*for (compt=0;compt<100;compt++) {
-
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+0] = 0;
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+1] = 0;
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+2] = 0;
-		}*/
 
 		switch (pval>>8) {
 			case 0:
@@ -283,68 +273,283 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				depth_mid[3*i+1] = lb;
 				depth_mid[3*i+2] = 0;
 				
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
-					
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 			
 				break;
 			case 2:
 				depth_mid[3*i+0] = 255-lb;
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = 0;
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
 					
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 				break;
 			case 3:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = lb;
 					
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 				break;
 			case 4:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255;
-					
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+				depth_mid[3*i+2] = 255
+;
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 				break;
 			case 5:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 255-lb;
 					
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 				break;
 			default:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 0;
 					
-				if(depth_mid[3*i+0]>240 && depth_mid[3*i+1]<10 && depth_mid[3*i+2]<50) {
-					depth_mid[3*i+0] = 255;
-					depth_mid[3*i+1] = 255;
-					depth_mid[3*i+2] = 255;
-				}
+	/**************************** CREATION DU CURSEUR ****************************/
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			}
+		}
+
+		for (compt=0;compt<30;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+			}
+		}
+	/*****************************************************************************/
 				break;
 		}
 	}
