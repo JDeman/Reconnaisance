@@ -249,17 +249,22 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
 	int i,x,y,compt,compt2;
 	uint16_t *depth = (uint16_t*)v_depth;
-
+	int j=0;
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	
+	int plusProche=1;
 	for (i=0; i<640*480; i++) {
 	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
-		int plusProche=1000;
-		if (depth[i]<plusProche)
-			plusProche=depth[i];
+		//IMPOSSIBLE DE TRAVAILLER AV DEPTH[]
+		/*if (depth[i]<plusProche) 
+			plusProche=i;
+		*/
+		if(depth_mid[3*i] > 230 && depth_mid[3*i+1] < 10 && depth_mid[3*i+2] < 10)
+			plusProche=i;
 		x=plusProche%640;
 		y=plusProche/640;
-		
+		//x=320;
+		//y=240;
 	/*************************************************************************/
 
 		int pval = t_gamma[depth[i]];
