@@ -252,7 +252,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	int j=0;
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	
-	int plusProche=1;
+	int plusProche=1000;
 	for (i=0; i<640*480; i++) {
 	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
 		//IMPOSSIBLE DE TRAVAILLER AV DEPTH[]
@@ -282,6 +282,41 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				depth_mid[3*i+1] = lb;
 				depth_mid[3*i+2] = 0;
 				
+			
+				break;
+			case 2:
+				depth_mid[3*i+0] = 255-lb;
+				depth_mid[3*i+1] = 255;
+				depth_mid[3*i+2] = 0;
+					
+				break;
+			case 3:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 255;
+				depth_mid[3*i+2] = lb;
+					
+				break;
+			case 4:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 255-lb;
+				depth_mid[3*i+2] = 255;
+
+				break;
+			case 5:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 0;
+				depth_mid[3*i+2] = 255-lb;
+					
+				break;
+			default:
+				depth_mid[3*i+0] = 0;
+				depth_mid[3*i+1] = 0;
+				depth_mid[3*i+2] = 0;
+	
+				break;
+		}
+	}
+	
 	/**************************** CREATION DU CURSEUR ****************************/
 		for (compt=0;compt<30;compt++) {
 
@@ -323,40 +358,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 			}
 		}
 	/*****************************************************************************/
-			
-				break;
-			case 2:
-				depth_mid[3*i+0] = 255-lb;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = 0;
-					
-				break;
-			case 3:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255;
-				depth_mid[3*i+2] = lb;
-					
-				break;
-			case 4:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255;
-
-				break;
-			case 5:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 0;
-				depth_mid[3*i+2] = 255-lb;
-					
-				break;
-			default:
-				depth_mid[3*i+0] = 0;
-				depth_mid[3*i+1] = 0;
-				depth_mid[3*i+2] = 0;
-	
-				break;
-		}
-	}
+	//printf("le point le plus proche depth(%d,%d)=%d\n",x,y,depth[getIndiceOfTab(x,y)]);
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
