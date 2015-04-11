@@ -271,7 +271,11 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		int lb = pval & 0xff;
 
 		switch (pval>>8) {
-			case 0:
+			case 0:	
+				depth_mid[3*i+0] = 255;
+				depth_mid[3*i+1] = 255-lb;
+				depth_mid[3*i+2] = 255-lb;
+
 				break;
 			case 1:
 				depth_mid[3*i+0] = 255;
@@ -326,235 +330,30 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = 0;
 					
-	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-			}
-		}
-	/*****************************************************************************/
 				break;
 			case 3:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = lb;
 					
-	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-			}
-		}
-	/*****************************************************************************/
 				break;
 			case 4:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255-lb;
-				depth_mid[3*i+2] = 255
-;
-	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
+				depth_mid[3*i+2] = 255;
 
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-			}
-		}
-	/*****************************************************************************/
 				break;
 			case 5:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 255-lb;
 					
-	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-			}
-		}
-	/*****************************************************************************/
 				break;
 			default:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 0;
-					
-	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-			}
-		}
-
-		for (compt=0;compt<30;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-			}
-		}
-	/*****************************************************************************/
+	
 				break;
 		}
 	}
