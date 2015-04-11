@@ -252,17 +252,19 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	int j=0;
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	
-	int plusProche=1000;
+	int plusProche;
+	int min=800;
 	for (i=0; i<640*480; i++) {
 	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
-		//IMPOSSIBLE DE TRAVAILLER AV DEPTH[]
-		/*if (depth[i]<plusProche) 
+		if (depth[i]<min && depth[i] > 300 ) { 
+			min=depth[i];
 			plusProche=i;
-		*/
-		if(depth_mid[3*i] > 230 && depth_mid[3*i+1] < 10 && depth_mid[3*i+2] < 10)
-			plusProche=i;
-		x=plusProche%640;
-		y=plusProche/640;
+			//printf("done %d fois\n",j);
+			//j++;
+		}
+		
+		/*if(depth_mid[3*i] > 230 && depth_mid[3*i+1] < 10 && depth_mid[3*i+2] < 10)
+			plusProche=i;*/
 		//x=320;
 		//y=240;
 	/*************************************************************************/
@@ -317,6 +319,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		}
 	}
 	
+		x=plusProche%640;
+		y=plusProche/640;
+
+		printf("plusProche = %d (x=%d,y=%d)\n", plusProche,x,y);
 	/**************************** CREATION DU CURSEUR ****************************/
 		for (compt=0;compt<30;compt++) {
 
