@@ -256,7 +256,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	int min=800;
 	for (i=0; i<640*480; i++) {
 	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
-		if (depth[i]<min && depth[i] > 300 ) { 
+		if (depth[i]<min && depth[i] > 600 ) { 
 			min=depth[i];
 			plusProche=i;
 			//printf("done %d fois\n",j);
@@ -318,53 +318,72 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 				break;
 		}
 	}
-	
-		x=plusProche%640;
-		y=plusProche/640;
+	// On recupere les coordonnées du pixel ayant la valeur la plus faible (=le point le plus proche)		
+	x=plusProche%640;
+	y=plusProche/640;
+	//printf("plusProche = %d (x=%d,y=%d)\n", plusProche,x,y);
 
-		printf("plusProche = %d (x=%d,y=%d)\n", plusProche,x,y);
 	/**************************** CREATION DU CURSEUR ****************************/
-		for (compt=0;compt<30;compt++) {
+		for (compt=0;compt<15;compt++) {
 
 			for (compt2=0;compt2<3;compt2++) {
 
 			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+		
 			}
 		}
 
-		for (compt=0;compt<30;compt++) {
+		for (compt=0;compt<15;compt++) {
 
 			for (compt2=0;compt2<3;compt2++) {
 
 			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+
 			}
 		}
 
-		for (compt=0;compt<30;compt++) {
+		for (compt=0;compt<15;compt++) {
 
 			for (compt2=0;compt2<3;compt2++) {
 
 			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
 			depth_mid[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+			
 			}
 		}
 
-		for (compt=0;compt<30;compt++) {
+		for (compt=0;compt<15;compt++) {
 
 			for (compt2=0;compt2<3;compt2++) {
 
 			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
 			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
 			depth_mid[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+
 			}
 		}
 	/*****************************************************************************/
-	//printf("le point le plus proche depth(%d,%d)=%d\n",x,y,depth[getIndiceOfTab(x,y)]);
+	//ce qui me semble logique  mais j'obient par exemple debut = 269001 et fin = 15581
+	//int debut=getIndiceOfTab( x+ (-1)*90 , y+ 120 );
+	//int fin=getIndiceOfTab( x+ 90 , y+ (-1)*120);
+	
+	int fin=getIndiceOfTab( x+ (-1)*90 , y+ 120 );
+	int debut=getIndiceOfTab( x+ 90 , y+ (-1)*120);
+	printf("coin supérieur gauche =%d \n coin supérieur droit =%d\n coin inférieur gauche=%d\n coin inférieur droit=%d\n",getIndiceOfTab(1,1), getIndiceOfTab(639,1), getIndiceOfTab(1,479), getIndiceOfTab(639,479));
+
+	//il faut gérer les cas de sorties de tableaux
+	/*for( compt=debut ; compt < fin ; compt++ ) {
+				//printf("je rentre ? compt=%d\n", compt);	
+				depth_mid[3*compt+0] = 255;
+				depth_mid[3*compt+1] = 255;
+				depth_mid[3*compt+2] = 255;
+	}*/
+
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
