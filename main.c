@@ -239,129 +239,176 @@ void *gl_threadfunc(void *arg)
 
 uint16_t t_gamma[2048];
 
+// passe de coordonnees en 2D en indice tableau 1D
 int getIndiceOfTab(int x, int y) {
         int indice;
-        indice = (y*680) + x;
+        indice = (y*640) + x;
         return indice;
+}
+
+// Fait l'inverse de la fonction ci-dessus (1D vers 2D)
+void get_X_Y(int indice, int* x, int* y){
+
+	*x = indice % 640;
+	*y = indice / 640; 
+}
+
+// retourne l'indice du point le plus proche de la caméra
+int detectNoze(uint16_t* board){
+	
+	int i;
+	int min=800;
+	int plusProche;
+	
+	for(i=0; i<640*480; i++){
+		
+		if(board[i] < min && board[i] > 600){
+			min = board[i];
+			plusProche =i;
+		}
+	}
+	
+	return plusProche;
+}
+
+// Affichage curseur pour nez
+void printNoze(uint8_t* board, int x, int y){
+
+	int compt,compt2;
+
+	if((y+15 <= 480)&&(y-15 >= 0)&&(x+15 <= 640)&&(x-15 >= 0)){
+		
+		// trait du bas
+		for (compt=0;compt<15;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			board[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
+			board[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
+			board[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
+	
+			}
+		}
+	
+		// trait du haut
+		for (compt=0;compt<15;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			board[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
+			board[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
+			board[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
+
+			}
+		}
+
+		// trait de droite
+		for (compt=0;compt<15;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			board[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
+			board[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
+			board[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
+		
+			}
+		}
+	
+		// trait de gauche
+		for (compt=0;compt<15;compt++) {
+
+			for (compt2=0;compt2<3;compt2++) {
+
+			board[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
+			board[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
+			board[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
+
+			}
+		}
+		
+	}
+	
 }
 
 void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 {
-	int i,x,y,compt,compt2;
-	uint16_t *depth = (uint16_t*)v_depth;
-
+	int i;
+	uint16_t *depth = (uint16_t*)v_depth; // tableau contenant les profondeurs
+	
+	int x,y; //AD
+	int j=0; //AD
+	
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	
-	for (i=0; i<640*480; i++) {
-	/********** DETECTION DU POINT LE PLUS PROCHE ****************************/
-		int plusProche=0;
-		if (depth[i]>plusProche)
-			plusProche=depth[i];
-		
-		
-		//322*190=61180 (a peu pres milieu haut, legerement sur la droite)				
-		x=31180%640;
-		y=61180/480;
-		//x=320;
-		//y=240;
-			//printf("x=%d y=%d\n", x, y);
-		
-	/*************************************************************************/
+	int indiceNez; //AD
+	
+	/************************************************************************************/
+	
+	indiceNez = detectNoze(depth); // recherche du point le plus proche de la caméra
+	get_X_Y(indiceNez,&x,&y); // obtention des coordonnees 2D du nez (on modifie x & y par passage en adresse)
+	
+	/************************************************************************************/
 
+	for (i=0; i<640*480; i++) {
+	
 		int pval = t_gamma[depth[i]];
 		int lb = pval & 0xff;
-		compt2=0;
-		/*for (compt=0;compt<100;compt++) {
-
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+0] = 0;
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+1] = 0;
-			rgb_mid[3*getIndiceOfTab(x,y+compt)+2] = 0;
-		}*/
-
 
 		switch (pval>>8) {
-			case 0:
+			case 0:	
+				depth_mid[3*i+0] = 255;
+				depth_mid[3*i+1] = 255-lb;
+				depth_mid[3*i+2] = 255-lb;
+
 				break;
 			case 1:
 				depth_mid[3*i+0] = 255;
 				depth_mid[3*i+1] = lb;
 				depth_mid[3*i+2] = 0;
 				
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
-				
+			
 				break;
 			case 2:
 				depth_mid[3*i+0] = 255-lb;
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = 0;
-
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
+					
 				break;
 			case 3:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255;
 				depth_mid[3*i+2] = lb;
 					
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
 				break;
 			case 4:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 255-lb;
 				depth_mid[3*i+2] = 255;
-					
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
+
 				break;
 			case 5:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 255-lb;
 					
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
 				break;
 			default:
 				depth_mid[3*i+0] = 0;
 				depth_mid[3*i+1] = 0;
 				depth_mid[3*i+2] = 0;
-					
-				for(compt2=0;compt2<2;compt2++) {
-					for(compt=0;compt<50;compt++) {
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+0] = 255;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+1] = 0;
-						depth_mid[3*(getIndiceOfTab(x,y+compt2)+compt)+2] = 0;
-					}
-				}
+	
+				break;
 		}
 	}
+	
+
+	printNoze(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
+
+	
+	int fin=getIndiceOfTab( x+ (-1)*90 , y+ 120 );
+	int debut=getIndiceOfTab( x+ 90 , y+ (-1)*120);
+	printf("coin sup gauche =%d \n coin sup droit =%d\n coin inf gauche=%d\n coin inf droit=%d\n",getIndiceOfTab(1,1), getIndiceOfTab(639,1), getIndiceOfTab(1,479), getIndiceOfTab(639,479));
+
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
 	pthread_mutex_unlock(&gl_backbuf_mutex);
@@ -493,4 +540,3 @@ int main(int argc, char **argv)
 
 	return 0;
 }
-
