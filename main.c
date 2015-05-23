@@ -254,27 +254,6 @@ void get_X_Y(int indice, int* x, int* y){
 	*y = indice / 640; 
 }
 
-/*************************************************************************************************/
-/****************************** FACIAL POINTS DETECTION ******************************************/
-/*************************************************************************************************/
-/*
-int detectNoze(uint16_t* board){
-	
-	int i;
-	int min=800;
-	int plusProche;
-	
-	for(i=0; i<640*480; i++){
-		
-		if(board[i] < min && board[i] > 600){
-			min = board[i];
-			plusProche =i;
-		}
-	}
-	
-	return plusProche;
-}*/
-
 // retourne l'indice du point le plus proche de la caméra
 void detectNoze(uint16_t* board, int *X, int *Y){
 	
@@ -297,7 +276,7 @@ void detectNoze(uint16_t* board, int *X, int *Y){
 // Détection Milieu des yeux à partir du nez
 void detectForeHead(uint16_t* board, int *X, int *Y){
 	
-	int i=0,j=0;
+	int i=0;
 	int k = *Y;
 	
 	if(k >= 40){ 
@@ -314,6 +293,32 @@ void detectForeHead(uint16_t* board, int *X, int *Y){
 	}
 	
 	printf("fail ==> foreHead search");
+}
+
+
+void detectChin(uint16_t* board, int *X, int *Y){
+
+	int k = *Y + 7;
+	int i = k;
+
+	
+	
+	if(k <= 440){
+		
+		for(i=k; i < k+40; i++){
+				if(board[getIndiceOfTab(*X,i+2)] <= board[getIndiceOfTab(*X,i)]){
+				
+					*Y = i+2;
+					//printf("VAR****VAR****VAR****VAR****VAR****VAR****VAR****VAR  YYY == %"PRIu16"", *Y);
+				}	
+				//delta = abs(board[getIndiceOfTab(*X,i+2)] - board[getIndiceOfTab(*X,i)]);
+		}
+		
+		printf("WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN");
+	}
+	
+	printf("fail ==> foreHead search");
+	
 }
 
 /*
@@ -347,11 +352,7 @@ int detectInfLip(uint16_t* board, int nozePositionX, int nozePositionY){
 	return 1;
 }
 
-int detectChin(uint16_t* board, int nozePositionX, int nozePositionY) {
 
-	printf("fail ==> Chin search has returned 1")
-	return 1;
-}
 */
 /*************************************************************************************************/
 /*************************************************************************************************/
@@ -482,9 +483,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	uint16_t *depth = (uint16_t*)v_depth; // tableau contenant les profondeurs
 	
 	int x,y; // coordonnees du nez
-	//int x1,y1;
+	int x1,y1;
 	int *px = &x, *py = &y;
-	//int *px1 = &x1, *py1 = &y1;
+	int *px1 = &x1, *py1 = &y1;
+	
 	int j=0; //AD
 	
 	pthread_mutex_lock(&gl_backbuf_mutex);
@@ -552,13 +554,17 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	detectNoze(depth,px,py); // recherche du point le plus proche de la caméra
 	printPoint(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
-	//printPoint(depth_mid,x,y-25);
 	
-	//fonctionStupide(depth,px,py); // test à la con !
+	*px1 = *px;
+	*py1 = *py;
+	
+	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
+	printPoint(depth_mid,x1,y1);
+	
 	detectForeHead(depth,px,py);
 	printPoint(depth_mid,x,y);
-	//printf("nez = %d\n autre = %d\n ",depth[getIndiceOfTab(x,y)], depth[getIndiceOfTab(x,y-25)]);
 	
+	//printf("nez = %d\n autre = %d\n ",depth[getIndiceOfTab(x,y)], depth[getIndiceOfTab(x,y-25)]);
 	//x= x+15;
 	//y= y+25;
 	
