@@ -19,6 +19,8 @@
 
 #include <math.h>
 
+char prenom[15];
+
 pthread_t freenect_thread;
 volatile int die = 0;
 
@@ -175,6 +177,12 @@ void keyPressed(unsigned char key, int x, int y)
 	if (key == '0') {
 		freenect_set_led(f_dev,LED_OFF);
 	}
+	if (key == 'a'){
+		printf("Entrez le nom de la personne à ficher");
+		scanf("%s", prenom);
+		printf("Salut, %s\n", prenom);
+		/*boardToFile(values,8); // on envoie les valeurs de profondeur dans le fichier*/
+	}
 	freenect_set_tilt_degs(f_dev,freenect_angle);
 }
 
@@ -264,8 +272,13 @@ void detectNoze(uint16_t* board, int *X, int *Y){
 	for(i=0; i<640*480; i++){
 		
 		if(board[i] < min && board[i] > 600){
-			min = board[i];
-			plusProche =i;
+			
+			get_X_Y(i,X,Y);
+			
+			if(*X > 250 && *X < 490){
+				min = board[i];
+				plusProche =i;
+			}
 		}
 	}
 	
@@ -289,14 +302,93 @@ void detectForeHead(uint16_t* board, int *X, int *Y){
 			}
 		}
 		
-		printf("WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN");
+		//printf("WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN");
 	}
-	
-	printf("fail ==> foreHead search");
 }
 
 
 void detectChin(uint16_t* board, int *X, int *Y){
+
+	int k = *Y + 7;
+	int i = k;
+
+	if(k <= 440){
+		
+		for(i=k; i < k+40; i++){
+				if(board[getIndiceOfTab(*X,i+2)] <= board[getIndiceOfTab(*X,i)]){
+				
+					*Y = i+2;
+					//printf("VAR****VAR****VAR****VAR****VAR****VAR****VAR****VAR  YYY == %"PRIu16"", *Y);
+				}	
+		}
+	}
+}
+
+
+// Retourne 0 si main gauche détectée, 0 sinon
+/*
+int detectLeftHand(uint16_t board){
+
+		int i; // parcours tableau
+	
+		if(board[getIndiceOfTab(40,70) < 700 || board[getIndiceOfTab(40,70) > 590){
+		
+				printf("\n *** LEFT HAND DETECTED *** \n");
+				return 1;
+		}
+		else{ 
+			return 0;
+		}
+}*/
+
+// Retourne 0 si main droite détectée, 0 sinon
+int detectRightHand(uint16_t *board){
+
+	
+		if((board[getIndiceOfTab(40,70)] < 700) && (board[getIndiceOfTab(40,70)] > 590)){
+		
+				printf("\n*** RIGHT HAND DETECTED ***\n");
+				return 1;
+		}
+		else{ 
+			return 0;
+		}
+}
+
+/* Prend les valeurs de valaue[] et les mets dans le fichier + nom de la personne au début */
+
+void saveNewFace(FILE *fp,char *nameArray, uint16_t *depthArray, int size){
+	
+	int i=0;
+	
+	fp = fopen("test", "w+");
+	
+	if(!fp){
+		printf("error opening file, exiting program");
+		exit(-1);
+	}
+
+	fprintf(fp,"%s\n",nameArray); // stockage du nom au début du fichier
+
+	for(i=0; i<size; i++){
+		fprintf(fp,"%d\n",depthArray[i]); // puis stockage profondeurs
+	}
+
+	fclose(fp); // fermeture fichier
+
+	printf("End of storage function");
+	
+}
+
+
+/* Récupère nom de la personne + met les valeurs dans le tableau 
+void readFromFile(uint16_t board, int size, FILE *fp){
+	
+	
+}*/
+
+/*
+void detectSupLip(uint16_t* board, int *X, int *Y){
 
 	int k = *Y + 7;
 	int i = k;
@@ -319,47 +411,32 @@ void detectChin(uint16_t* board, int *X, int *Y){
 	
 	printf("fail ==> foreHead search");
 	
-}
-
-/*
-void fonctionStupide(uint16_t* board, int *X, int *Y){
-
-	if(board[getIndiceOfTab(*X,*Y)] <= board[getIndiceOfTab(*X,*Y-10)]){
-	
-		printf("WIN-WIN-WIN-WIN-WIN-WIN-WIN-WIN-WIN-WIN-WIN-WIN");
-		//return;
-	}
-	
-	else{
-		printf("FAIL--FAIL--FAIL--FAIL--FAIL--FAIL");
-		//return;
-	}
-
 }*/
 
-/*
-int detectSupLip(uint16_t* board, int nozePositionX, int nozePositionY){
+// Retourne 1 si les valeurs correspondent
+/*int compare(uint16_t board, uint16_t board2, int size){
 
-	
-	printf("fail ==> SupLip search has returned 1")
-	return 1;
-}
+	if(aaa != bbb)
+		return 0;
+		
+	if(aaa != bbb)
+		return 0;
+		
+	if(aaa != bbb)
+		return 0;
+		
+	if(aaa != bbb)
+		return 0;
+		
+	return 1; // if all values match
+}*/
 
-int detectInfLip(uint16_t* board, int nozePositionX, int nozePositionY){
-
-	
-	printf("fail ==> InfLip search has returned 1")
-	return 1;
-}
-
-
-*/
 /*************************************************************************************************/
 /*************************************************************************************************/
 /*************************************************************************************************/
 
 
-// Affichage curseur
+/* Affichage curseur
 void printCursor(uint8_t* board, int x, int y){
 
 	int compt,compt2;
@@ -418,6 +495,7 @@ void printCursor(uint8_t* board, int x, int y){
 	}
 	
 }
+*/
 
 // Affiche un point aux coordonnees donnees
 void printPoint(uint8_t* board, int x, int y){
@@ -483,22 +561,22 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	uint16_t *depth = (uint16_t*)v_depth; // tableau contenant les profondeurs
 	
 	int x,y; // coordonnees du nez
-	int x1,y1;
+	int x1,y1,x2,y2;
 	int *px = &x, *py = &y;
 	int *px1 = &x1, *py1 = &y1;
+	int *px2 = &x2, *py2 = &y2;
 	
-	int j=0; //AD
+	char userName[16];
+	uint16_t values[8] = {0,0,0,0,0,0,0,0};
+	uint16_t fileValues[8] = {0,0,0,0,0,0,0,0};
+	FILE *fp = NULL;
+	
+	int j=0;
 	
 	pthread_mutex_lock(&gl_backbuf_mutex);
 	
 	int indiceNez; //AD
 	
-	/************************************************************************************/
-	//indiceNez = detectNoze(depth); // recherche du point le plus proche de la caméra
-	//get_X_Y(indiceNez,&x,&y); // obtention des coordonnees 2D du nez (on modifie x & y par passage en adresse)
-	
-	//printCursor(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
-	/************************************************************************************/
 
 	for (i=0; i<640*480; i++) {
 	
@@ -552,17 +630,45 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		}
 	}
 	
+
+	
 	detectNoze(depth,px,py); // recherche du point le plus proche de la caméra
+	values[0] = depth[getIndiceOfTab(x,y)];
 	printPoint(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
 	
 	*px1 = *px;
 	*py1 = *py;
+	*px2 = *px;
+	*py2 = *py;
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
+	values[1] = depth[getIndiceOfTab(x1,y1)];
 	printPoint(depth_mid,x1,y1);
 	
-	detectForeHead(depth,px,py);
-	printPoint(depth_mid,x,y);
+	detectForeHead(depth,px2,py2);
+	values[2] = depth[getIndiceOfTab(x2,y2)];
+	printPoint(depth_mid,x2,y2);
+	
+
+	
+	if(detectRightHand(depth) == 1){
+		printf("\nENTER YOUR NAME\n");
+		scanf("%s", userName);
+		printf("\n");
+		saveNewFace(fp,userName,values,8);
+	}
+	
+	/*
+	if(detectLeftHand(depth) == 1){
+		
+		readFromFile();
+	
+		if(compare(values1[],values2[]) == 1){
+			printf("+++++++++++  KINECT DETECTED JOHN  +++++++++++");
+		}
+	
+	}*/
+	
 	
 	//printf("nez = %d\n autre = %d\n ",depth[getIndiceOfTab(x,y)], depth[getIndiceOfTab(x,y-25)]);
 	//x= x+15;
