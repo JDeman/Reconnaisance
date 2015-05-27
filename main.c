@@ -324,6 +324,7 @@ void detectChin(uint16_t* board, int *X, int *Y){
 	}
 }
 
+/*
 void detectLeftCheek(uint16_t* board, int *X, int *Y){
 	
 	int i=0;
@@ -352,30 +353,27 @@ void detectRightCheek(uint16_t* board, int *X, int *Y){
 				}
 		}
 	}
-}
+}*/
 
 
 // Retourne 0 si main gauche détectée, 0 sinon
-/*
-int detectLeftHand(uint16_t board){
-
-		int i; // parcours tableau
+int detectLeftHand(uint16_t *board){
 	
-		if(board[getIndiceOfTab(40,70) < 700 || board[getIndiceOfTab(40,70) > 590){
+		if(board[getIndiceOfTab(512,70)] < 700 && board[getIndiceOfTab(512,70)] > 500){
 		
-				printf("\n *** LEFT HAND DETECTED *** \n");
+				printf("\n*** LEFT HAND DETECTED ***\n");
 				return 1;
 		}
 		else{ 
 			return 0;
 		}
-}*/
+}
 
 // Retourne 0 si main droite détectée, 0 sinon
 int detectRightHand(uint16_t *board){
-
 	
-		if((board[getIndiceOfTab(40,70)] < 700) && (board[getIndiceOfTab(40,70)] > 590)){
+	
+		if((board[getIndiceOfTab(40,70)] < 700) && (board[getIndiceOfTab(40,70)] > 500)){
 		
 				printf("\n*** RIGHT HAND DETECTED ***\n");
 				return 1;
@@ -411,11 +409,29 @@ void saveNewFace(FILE *fp,char *nameArray, uint16_t *depthArray, int size){
 }
 
 
-/* Récupère nom de la personne + met les valeurs dans le tableau 
-void readFromFile(uint16_t board, int size, FILE *fp){
+// Récupère nom de la personne + met les valeurs dans le tableau 
+void readFromFile(FILE *fp, char *nameArray, uint16_t *values, int size){
+		
+	int i=0;
+
+	fp = fopen("test", "r");
+
+	if(!fp){
+		printf("error opening file, exiting program");
+		exit(-1);
+	}
+
+	fscanf(fp,"%s", nameArray);
+
+	for(i=0; i<size; i++){
+		fscanf(fp,"%" SCNd16 "",values+i);
+	}
+
+	printf("End of file reading");
+
+	fclose(fp); // fermeture fichier
 	
-	
-}*/
+}
 
 /*
 void detectSupLip(uint16_t* board, int *X, int *Y){
@@ -685,15 +701,17 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	values[2] = depth[getIndiceOfTab(x2,y2)];
 	printPoint(depth_mid,x2,y2);
 	
+	/*
 	detectRightCheek(depth,px3,py3);
 	values[3] = depth[getIndiceOfTab(x3,y3)];
 	printPoint(depth_mid,x3,y3);
 	
-	/*
 	detectLeftCheek(depth,px4,py4);
 	values[4] = depth[getIndiceOfTab(x4,y4)];
 	printPoint(depth_mid,x4,y4);
 	*/
+	
+	
 	if(detectRightHand(depth) == 1){
 		printf("\nENTER YOUR NAME\n");
 		scanf("%s", userName);
@@ -701,16 +719,14 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		saveNewFace(fp,userName,values,8);
 	}
 	
-	/*
+	
 	if(detectLeftHand(depth) == 1){
 		
-		readFromFile();
+		readFromFile(fp,userName,fileValues,8);
+		printf("\nusername is: %s\n", userName);
+		printf("fileValues[0] = %d  fileValues[2] = %d  fileValues[3] = %d",fileValues[0],fileValues[1],fileValues[2]);
 	
-		if(compare(values1[],values2[]) == 1){
-			printf("+++++++++++  KINECT DETECTED JOHN  +++++++++++");
-		}
-	
-	}*/
+	}
 	
 	
 	//printf("nez = %d\n autre = %d\n ",depth[getIndiceOfTab(x,y)], depth[getIndiceOfTab(x,y-25)]);
