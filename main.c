@@ -383,31 +383,39 @@ int detectRightHand(uint16_t *board){
 		}
 }
 
-/* Prend les valeurs de valaue[] et les mets dans le fichier + nom de la personne au début */
-
-void saveNewFace(FILE *fp,char *nameArray, uint16_t *depthArray, int size){
+void createFiles(char *string, uint16_t *values, int size){
 	
-	int i=0;
+	FILE *files[20]; // tableau de pointeurs fichiers
+	int i=0,j=0;
 	
-	fp = fopen("test", "w+");
-	
-	if(!fp){
-		printf("error opening file, exiting program");
-		exit(-1);
+	for (i = 0; i < 20; i++){
+		char filename[20]; // nom du fichier
+		
+		sprintf(filename, "visage%d.txt", i);
+		
+		files[i] = fopen(filename, "r");
+		if(files[i] == NULL){
+				files[i] = fopen(filename, "w+");
+				if(files[i] == NULL){
+					printf("\nBUGG AT FILE GENERATION\n");
+					exit(-1);
+				}
+				else{
+					fprintf(files[i],"%s\n",string);
+					for(j=0;j<8; j++){
+						fprintf(files[i],"%" SCNd16 "\n", values[j]);
+					}
+					fclose(files[i]);
+					return;
+				}
+				
+		}
+		
+		fclose(files[i]);
 	}
-
-	fprintf(fp,"%s\n",nameArray); // stockage du nom au début du fichier
-
-	for(i=0; i<size; i++){
-		fprintf(fp,"%d\n",depthArray[i]); // puis stockage profondeurs
-	}
-
-	fclose(fp); // fermeture fichier
-
-	printf("End of storage function");
 	
+	return;
 }
-
 
 // Récupère nom de la personne + met les valeurs dans le tableau 
 void readFromFile(FILE *fp, char *nameArray, uint16_t *values, int size){
@@ -460,7 +468,7 @@ void detectSupLip(uint16_t* board, int *X, int *Y){
 }*/
 
 // Retourne 1 si les valeurs correspondent
-/*int compare(uint16_t board, uint16_t board2, int size){
+int compare(uint16_t board, uint16_t board2, int size){
 
 	if(aaa != bbb)
 		return 0;
@@ -475,7 +483,7 @@ void detectSupLip(uint16_t* board, int *X, int *Y){
 		return 0;
 		
 	return 1; // if all values match
-}*/
+}
 
 /*************************************************************************************************/
 /*************************************************************************************************/
@@ -682,6 +690,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	detectNoze(depth,px,py); // recherche du point le plus proche de la caméra
 	values[0] = depth[getIndiceOfTab(x,y)];
+	values[3] = getIndiceOfTab(x,y);
 	printPoint(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
 	
 	*px1 = *px;
@@ -695,10 +704,12 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
 	values[1] = depth[getIndiceOfTab(x1,y1)];
+	values[4] = getIndiceOfTab(x1,y1);
 	printPoint(depth_mid,x1,y1);
 	
 	detectForeHead(depth,px2,py2);
 	values[2] = depth[getIndiceOfTab(x2,y2)];
+	values[5] = getIndiceOfTab(x2,y2);
 	printPoint(depth_mid,x2,y2);
 	
 	/*
@@ -716,7 +727,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		printf("\nENTER YOUR NAME\n");
 		scanf("%s", userName);
 		printf("\n");
-		saveNewFace(fp,userName,values,8);
+		createFiles(userName,values,8);
 	}
 	
 	
