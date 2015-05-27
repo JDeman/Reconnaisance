@@ -324,6 +324,36 @@ void detectChin(uint16_t* board, int *X, int *Y){
 	}
 }
 
+void detectLeftCheek(uint16_t* board, int *X, int *Y){
+	
+	int i=0;
+	int k = *X;
+	
+	if(k > 50 && k < 590){
+		
+		for(i=k; i < k+30; i++){
+				if(board[getIndiceOfTab(i+3,*Y-4)] <= board[getIndiceOfTab(i,*Y-4)]){
+						*X = i+3;
+				}
+		}
+	}
+}
+
+void detectRightCheek(uint16_t* board, int *X, int *Y){
+	
+	int k = *X;
+	int i=k;
+	
+	if(k > 50 && k < 590){
+		
+		for(i=k; i < k-30; i--){
+				if(board[getIndiceOfTab(i-2,*Y-4)] >= board[getIndiceOfTab(i,*Y-4)]){
+						*X = i+2;
+				}
+		}
+	}
+}
+
 
 // Retourne 0 si main gauche détectée, 0 sinon
 /*
@@ -561,10 +591,12 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	uint16_t *depth = (uint16_t*)v_depth; // tableau contenant les profondeurs
 	
 	int x,y; // coordonnees du nez
-	int x1,y1,x2,y2;
+	int x1,y1,x2,y2,x3,y3,x4,y4;
 	int *px = &x, *py = &y;
 	int *px1 = &x1, *py1 = &y1;
 	int *px2 = &x2, *py2 = &y2;
+	int *px3 = &x3, *py3 = &y3;
+	int *px4 = &x4, *py4 = &y4;
 	
 	char userName[16];
 	uint16_t values[8] = {0,0,0,0,0,0,0,0};
@@ -640,6 +672,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	*py1 = *py;
 	*px2 = *px;
 	*py2 = *py;
+	*px3 = *px;
+	*py3 = *py;
+	*px4 = *px;
+	*py4 = *py;
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
 	values[1] = depth[getIndiceOfTab(x1,y1)];
@@ -649,8 +685,15 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	values[2] = depth[getIndiceOfTab(x2,y2)];
 	printPoint(depth_mid,x2,y2);
 	
-
+	detectRightCheek(depth,px3,py3);
+	values[3] = depth[getIndiceOfTab(x3,y3)];
+	printPoint(depth_mid,x3,y3);
 	
+	/*
+	detectLeftCheek(depth,px4,py4);
+	values[4] = depth[getIndiceOfTab(x4,y4)];
+	printPoint(depth_mid,x4,y4);
+	*/
 	if(detectRightHand(depth) == 1){
 		printf("\nENTER YOUR NAME\n");
 		scanf("%s", userName);
