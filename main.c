@@ -513,12 +513,12 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	int x,y; // coordonnees du nez
 	int x1,y1,x2,y2;
-	//int x3,y3,x4,y4;
+	int x3,y3,x4,y4; // joues
 	int *px = &x, *py = &y;
 	int *px1 = &x1, *py1 = &y1;
 	int *px2 = &x2, *py2 = &y2;
-	//int *px3 = &x3, *py3 = &y3;
-	//int *px4 = &x4, *py4 = &y4;
+	int *px3 = &x3, *py3 = &y3;
+	int *px4 = &x4, *py4 = &y4;
 	
 	char userName[16];
 	uint16_t values[8] = {0,0,0,0,0,0,0,0};
@@ -597,10 +597,13 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	*py1 = *py;
 	*px2 = *px;
 	*py2 = *py;
-	//*px3 = *px;
-	//*py3 = *py;
-	//*px4 = *px;
-	//*py4 = *py;
+	*px3 = *px + 24;
+	*py3 = *py;
+	*px4 = *px - 24;
+	*py4 = *py;
+	
+	printPoint(depth_mid,x3,y3);
+	printPoint(depth_mid,x4,y4);
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
 	values[1] = depth[getIndiceOfTab(x1,y1)];
