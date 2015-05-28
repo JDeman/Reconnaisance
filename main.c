@@ -324,37 +324,6 @@ void detectChin(uint16_t* board, int *X, int *Y){
 	}
 }
 
-/*
-void detectLeftCheek(uint16_t* board, int *X, int *Y){
-	
-	int i=0;
-	int k = *X;
-	
-	if(k > 50 && k < 590){
-		
-		for(i=k; i < k+30; i++){
-				if(board[getIndiceOfTab(i+3,*Y-4)] <= board[getIndiceOfTab(i,*Y-4)]){
-						*X = i+3;
-				}
-		}
-	}
-}
-
-void detectRightCheek(uint16_t* board, int *X, int *Y){
-	
-	int k = *X;
-	int i=k;
-	
-	if(k > 50 && k < 590){
-		
-		for(i=k; i < k-30; i--){
-				if(board[getIndiceOfTab(i-2,*Y-4)] >= board[getIndiceOfTab(i,*Y-4)]){
-						*X = i+2;
-				}
-		}
-	}
-}*/
-
 
 // Retourne 0 si main gauche détectée, 0 sinon
 int detectLeftHand(uint16_t *board){
@@ -383,12 +352,12 @@ int detectRightHand(uint16_t *board){
 		}
 }
 
-void createFiles(char *string, uint16_t *values, int size){
+void createFiles(char *string, uint16_t *values, int *coord, int size){
 	
-	FILE *files[20]; // tableau de pointeurs fichiers
+	FILE *files[30]; // tableau de pointeurs fichiers
 	int i=0,j=0;
 	
-	for (i = 0; i < 20; i++){
+	for (i = 0; i < 30; i++){
 		char filename[20]; // nom du fichier
 		
 		sprintf(filename, "visage%d.txt", i);
@@ -405,6 +374,9 @@ void createFiles(char *string, uint16_t *values, int size){
 					for(j=0;j<8; j++){
 						fprintf(files[i],"%" SCNd16 "\n", values[j]);
 					}
+					for(j=0;j<8; j++){
+						fprintf(files[i],"%d\n", coord[j]);
+					}
 					fclose(files[i]);
 					return;
 				}
@@ -418,10 +390,45 @@ void createFiles(char *string, uint16_t *values, int size){
 }
 
 // Récupère nom de la personne + met les valeurs dans le tableau 
-void readFromFile(FILE *fp, char *nameArray, uint16_t *values, int size){
+void readFromFile(char *nameArray,uint16_t *board, uint16_t *boardFile, int *coord, int *coordFile, int size){
 		
-	int i=0;
+	FILE *files[20];	
+	int i=0,j=0;
 
+	for (i = 0; i<20; i++){
+		char filename[20]; // nom du fichier
+		
+		sprintf(filename, "visage%d.txt", i);
+		
+		files[i] = fopen(filename, "r");
+		if(files[i] == NULL){
+				printf("\n*** NO OTHER FILE ***\n");
+				return;
+		}
+		else{
+			fscanf(files[i],"%s\n", nameArray);
+			for(j=0;j<8; j++){
+				fscanf(files[i],"%" SCNd16 "\n", &boardFile[j]);
+			}
+			for(j=0;j<8; j++){
+				fscanf(files[i],"%d\n", &coordFile[j]);
+			}
+			fclose(files[i]);
+			
+			if(compare(board,boardFile,coord,coordFile,8) == 1){
+				printf("\n********** DEVICE DETECTED %s **********", nameArray);
+				return;
+			}
+			
+		}
+		
+		//fclose(files[i]);
+	}
+	
+	printf("\n*** NO OTHER FILE ***\n");
+	return;
+
+	/*
 	fp = fopen("test", "r");
 
 	if(!fp){
@@ -437,49 +444,20 @@ void readFromFile(FILE *fp, char *nameArray, uint16_t *values, int size){
 
 	printf("End of file reading");
 
-	fclose(fp); // fermeture fichier
+	fclose(fp); // fermeture fichier*/
 	
 }
 
-/*
-void detectSupLip(uint16_t* board, int *X, int *Y){
-
-	int k = *Y + 7;
-	int i = k;
-
-	
-	
-	if(k <= 440){
-		
-		for(i=k; i < k+40; i++){
-				if(board[getIndiceOfTab(*X,i+2)] <= board[getIndiceOfTab(*X,i)]){
-				
-					*Y = i+2;
-					//printf("VAR****VAR****VAR****VAR****VAR****VAR****VAR****VAR  YYY == %"PRIu16"", *Y);
-				}	
-				//delta = abs(board[getIndiceOfTab(*X,i+2)] - board[getIndiceOfTab(*X,i)]);
-		}
-		
-		printf("WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN");
-	}
-	
-	printf("fail ==> foreHead search");
-	
-}*/
-
 // Retourne 1 si les valeurs correspondent
-int compare(uint16_t board, uint16_t board2, int size){
+int compare(uint16_t *board, uint16_t *boardFile, int *coord, int *coordFile, int size){
 
-	if(aaa != bbb)
+	if(abs((board[2]-board[0])-(boardFile[2]-boardFile[0])) >= 2 ) // distance nez-front
 		return 0;
 		
-	if(aaa != bbb)
+	if(abs((board[1]-board[0])-(boardFile[1]-boardFile[0])) >= 2) // distance nez-menton
 		return 0;
 		
-	if(aaa != bbb)
-		return 0;
-		
-	if(aaa != bbb)
+	if(abs((board[2]-board[1])-(boardFile[2]-boardFile[1])) >= 2) // distance menton-front
 		return 0;
 		
 	return 1; // if all values match
@@ -489,67 +467,6 @@ int compare(uint16_t board, uint16_t board2, int size){
 /*************************************************************************************************/
 /*************************************************************************************************/
 
-
-/* Affichage curseur
-void printCursor(uint8_t* board, int x, int y){
-
-	int compt,compt2;
-
-	// condition pour ne pas sortir du tableau
-	if((y+15 <= 480)&&(y-15 >= 0)&&(x+15 <= 640)&&(x-15 >= 0)){
-		
-		// trait du bas
-		for (compt=0;compt<15;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			board[3*getIndiceOfTab(x+compt2,y+compt)+0] = 255;
-			board[3*getIndiceOfTab(x+compt2,y+compt)+1] = 255;
-			board[3*getIndiceOfTab(x+compt2,y+compt)+2] = 255;
-	
-			}
-		}
-	
-		// trait du haut
-		for (compt=0;compt<15;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			board[3*getIndiceOfTab(x+compt2,y-compt)+0] = 255;
-			board[3*getIndiceOfTab(x+compt2,y-compt)+1] = 255;
-			board[3*getIndiceOfTab(x+compt2,y-compt)+2] = 255;
-
-			}
-		}
-
-		// trait de droite
-		for (compt=0;compt<15;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			board[3*getIndiceOfTab(x+compt,y+compt2)+0] = 255;
-			board[3*getIndiceOfTab(x+compt,y+compt2)+1] = 255;
-			board[3*getIndiceOfTab(x+compt,y+compt2)+2] = 255;
-		
-			}
-		}
-	
-		// trait de gauche
-		for (compt=0;compt<15;compt++) {
-
-			for (compt2=0;compt2<3;compt2++) {
-
-			board[3*getIndiceOfTab(x-compt,y+compt2)+0] = 255;
-			board[3*getIndiceOfTab(x-compt,y+compt2)+1] = 255;
-			board[3*getIndiceOfTab(x-compt,y+compt2)+2] = 255;
-
-			}
-		}
-		
-	}
-	
-}
-*/
 
 // Affiche un point aux coordonnees donnees
 void printPoint(uint8_t* board, int x, int y){
@@ -625,6 +542,8 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	char userName[16];
 	uint16_t values[8] = {0,0,0,0,0,0,0,0};
 	uint16_t fileValues[8] = {0,0,0,0,0,0,0,0};
+	int coordinates[8] = {0,0,0,0,0,0,0,0};
+	int fileCoordinates[8] = {0,0,0,0,0,0,0,0};
 	FILE *fp = NULL;
 	
 	int j=0;
@@ -690,7 +609,7 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	detectNoze(depth,px,py); // recherche du point le plus proche de la caméra
 	values[0] = depth[getIndiceOfTab(x,y)];
-	values[3] = getIndiceOfTab(x,y);
+	coordinates[0] = getIndiceOfTab(x,y);
 	printPoint(depth_mid,x,y); // affichage du curseur sur le point le plus proche (on espère le nez)
 	
 	*px1 = *px;
@@ -704,12 +623,12 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
 	values[1] = depth[getIndiceOfTab(x1,y1)];
-	values[4] = getIndiceOfTab(x1,y1);
+	coordinates[1] = getIndiceOfTab(x1,y1);
 	printPoint(depth_mid,x1,y1);
 	
 	detectForeHead(depth,px2,py2);
 	values[2] = depth[getIndiceOfTab(x2,y2)];
-	values[5] = getIndiceOfTab(x2,y2);
+	coordinates[2] = getIndiceOfTab(x2,y2);
 	printPoint(depth_mid,x2,y2);
 	
 	/*
@@ -727,28 +646,16 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 		printf("\nENTER YOUR NAME\n");
 		scanf("%s", userName);
 		printf("\n");
-		createFiles(userName,values,8);
+		createFiles(userName,values,coordinates,8);
 	}
 	
 	
 	if(detectLeftHand(depth) == 1){
-		
-		readFromFile(fp,userName,fileValues,8);
-		printf("\nusername is: %s\n", userName);
-		printf("fileValues[0] = %d  fileValues[2] = %d  fileValues[3] = %d",fileValues[0],fileValues[1],fileValues[2]);
-	
+		readFromFile(userName,values,fileValues,coordinates,fileCoordinates,8);
+		/*if(compare(values,fileValues,coordinates,fileCoordinates,8) ==1){
+			printf("KINECT DETECTED %s", userName);
+		}*/
 	}
-	
-	
-	//printf("nez = %d\n autre = %d\n ",depth[getIndiceOfTab(x,y)], depth[getIndiceOfTab(x,y-25)]);
-	//x= x+15;
-	//y= y+25;
-	
-	//printPoint(depth_mid,x+15,y+15); // test 2ème curseur
-	
-	//int fin=getIndiceOfTab( x+ (-1)*90 , y+ 120 );
-	//int debut=getIndiceOfTab( x+ 90 , y+ (-1)*120);
-	//printf("coin sup gauche =%d \n coin sup droit =%d\n coin inf gauche=%d\n coin inf droit=%d\n",getIndiceOfTab(1,1), getIndiceOfTab(639,1), getIndiceOfTab(1,479), getIndiceOfTab(639,479));
 
 	got_depth++;
 	pthread_cond_signal(&gl_frame_cond);
