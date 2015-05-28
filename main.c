@@ -298,11 +298,9 @@ void detectForeHead(uint16_t* board, int *X, int *Y){
 			if(board[getIndiceOfTab(*X,i-2)] <= board[getIndiceOfTab(*X,i)]){
 			
 				*Y = i-2;
-				//printf("VAR****VAR****VAR****VAR****VAR****VAR****VAR****VAR  YYY == %"PRIu16"", *Y);
 			}
 		}
 		
-		//printf("WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN---WIN");
 	}
 }
 
@@ -427,24 +425,6 @@ void readFromFile(char *nameArray,uint16_t *board, uint16_t *boardFile, int *coo
 	
 	printf("\n*** NO OTHER FILE ***\n");
 	return;
-
-	/*
-	fp = fopen("test", "r");
-
-	if(!fp){
-		printf("error opening file, exiting program");
-		exit(-1);
-	}
-
-	fscanf(fp,"%s", nameArray);
-
-	for(i=0; i<size; i++){
-		fscanf(fp,"%" SCNd16 "",values+i);
-	}
-
-	printf("End of file reading");
-
-	fclose(fp); // fermeture fichier*/
 	
 }
 
@@ -532,18 +512,19 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	uint16_t *depth = (uint16_t*)v_depth; // tableau contenant les profondeurs
 	
 	int x,y; // coordonnees du nez
-	int x1,y1,x2,y2,x3,y3,x4,y4;
+	int x1,y1,x2,y2;
+	//int x3,y3,x4,y4;
 	int *px = &x, *py = &y;
 	int *px1 = &x1, *py1 = &y1;
 	int *px2 = &x2, *py2 = &y2;
-	int *px3 = &x3, *py3 = &y3;
-	int *px4 = &x4, *py4 = &y4;
+	//int *px3 = &x3, *py3 = &y3;
+	//int *px4 = &x4, *py4 = &y4;
 	
 	char userName[16];
 	uint16_t values[8] = {0,0,0,0,0,0,0,0};
-	uint16_t fileValues[8] = {0,0,0,0,0,0,0,0};
+	uint16_t fileValues[8] = {0,0,0,0,0,0,0,0}; // valeurs de profondeurs provenant de fichiers
 	int coordinates[8] = {0,0,0,0,0,0,0,0};
-	int fileCoordinates[8] = {0,0,0,0,0,0,0,0};
+	int fileCoordinates[8] = {0,0,0,0,0,0,0,0}; // valeurs de coordonnées provenant de fichiers
 	FILE *fp = NULL;
 	
 	int j=0;
@@ -616,10 +597,10 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	*py1 = *py;
 	*px2 = *px;
 	*py2 = *py;
-	*px3 = *px;
-	*py3 = *py;
-	*px4 = *px;
-	*py4 = *py;
+	//*px3 = *px;
+	//*py3 = *py;
+	//*px4 = *px;
+	//*py4 = *py;
 	
 	detectChin(depth,px1,py1); /* obligé d'utiliser x1 & y1 pour pas perdre les coordonnées du nez a utiliser pour le front */
 	values[1] = depth[getIndiceOfTab(x1,y1)];
@@ -630,16 +611,6 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	values[2] = depth[getIndiceOfTab(x2,y2)];
 	coordinates[2] = getIndiceOfTab(x2,y2);
 	printPoint(depth_mid,x2,y2);
-	
-	/*
-	detectRightCheek(depth,px3,py3);
-	values[3] = depth[getIndiceOfTab(x3,y3)];
-	printPoint(depth_mid,x3,y3);
-	
-	detectLeftCheek(depth,px4,py4);
-	values[4] = depth[getIndiceOfTab(x4,y4)];
-	printPoint(depth_mid,x4,y4);
-	*/
 	
 	
 	if(detectRightHand(depth) == 1){
@@ -652,9 +623,6 @@ void depth_cb(freenect_device *dev, void *v_depth, uint32_t timestamp)
 	
 	if(detectLeftHand(depth) == 1){
 		readFromFile(userName,values,fileValues,coordinates,fileCoordinates,8);
-		/*if(compare(values,fileValues,coordinates,fileCoordinates,8) ==1){
-			printf("KINECT DETECTED %s", userName);
-		}*/
 	}
 
 	got_depth++;
